@@ -1,4 +1,4 @@
-# tin-invest-prom-exporter
+# [Tinkoff Investment — Prometheus] exporter
 
 — [Get read only token](https://www.tinkoff.ru/invest/settings/api/) \
 — [Use correct Node.JS version](.nvmrc) \
