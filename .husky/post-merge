@@ -8,5 +8,5 @@ if [ -n "${POST_MERGE_RESTART}" ]; then
 
     npm i
     echo "\n${F_BOLD}${C_BLUE}restarting exporter service...${NO_FORMAT}"
-    systemctl restart ya-iot-exporter.service
+    systemctl restart tin-invest-exporter.service
 fi
