@@ -30,5 +30,5 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
 
-      - name: Run pull
-        run: ssh vds 'cd ~/git/tin-invest-prom-exporter && git pull && nvm use && npm run setup && systemctl restart tin-invest-exporter.service'
+      - name: Run command
+        run: ssh vds 'cd ~/git/tin-invest-prom-exporter && git pull'
