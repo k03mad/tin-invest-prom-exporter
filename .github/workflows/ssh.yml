@@ -14,12 +14,12 @@ jobs:
       - name: Run commands
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.HOST }}
-          port: ${{ secrets.PORT }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/git/tin-invest-prom-exporter
+            z tin-invest-prom-exporter
             gpl
             npm run setup
             screstart tin-invest-exporter.service
