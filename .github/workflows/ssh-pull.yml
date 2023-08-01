@@ -1,0 +1,19 @@
+name: SSH pull
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  pull:
+    name: Run SSH pull
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote SSH commands
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: cd ~/git/tin-invest-prom-exporter && git pull
