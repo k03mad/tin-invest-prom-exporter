@@ -41,10 +41,12 @@ export default new client.Gauge({
                     const positionPriceTotal = positionPriceOne * positionQuantity;
 
                     const positionYieldTotal = Tinkoff.getUnitsWithNano(position.expectedYield);
+                    const positionYieldPercentTotal = positionYieldTotal * 100 / (positionPriceTotal - positionYieldTotal);
 
                     this.labels(account.name, positionName, 'priceOne').set(positionPriceOne);
                     this.labels(account.name, positionName, 'priceTotal').set(positionPriceTotal);
                     this.labels(account.name, positionName, 'yieldTotal').set(positionYieldTotal);
+                    this.labels(account.name, positionName, 'yieldPercentTotal').set(positionYieldPercentTotal);
                     this.labels(account.name, positionName, 'quantity').set(positionQuantity);
                 }));
             }
