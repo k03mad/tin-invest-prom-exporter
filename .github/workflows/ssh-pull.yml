@@ -2,18 +2,32 @@ name: SSH pull
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
   pull:
     name: Run SSH pull
     runs-on: ubuntu-latest
     steps:
-      - name: Executing remote SSH commands
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: cd ~/git/tin-invest-prom-exporter && git pull
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/vds.key
+          chmod 600 ~/.ssh/vds.key
+          cat >>~/.ssh/config <<END
+          Host vds
+            HostName $SSH_HOST
+            User $SSH_USER
+            Port $SSH_PORT
+            IdentityFile ~/.ssh/vds.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+
+      - name: Stop the server
+        run: ssh vds 'cd ~/git/tin-invest-prom-exporter && git pull'
