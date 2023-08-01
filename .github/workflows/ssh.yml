@@ -21,5 +21,5 @@ jobs:
           script: |
             cd ~/git/tin-invest-prom-exporter
             git pull
-            ~/.nvm/nvm-exec npm i
+            ~/.nvm/nvm-exec npm run start
             systemctl restart tin-invest-exporter.service
