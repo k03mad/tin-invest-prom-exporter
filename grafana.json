@@ -54,7 +54,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "liveNow": false,
@@ -76,7 +76,7 @@
               },
               {
                 "color": "red",
-                "value": -9999999999
+                "value": -100000000000000000000
               },
               {
                 "color": "green",
@@ -117,10 +117,11 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
+          "exemplar": false,
           "expr": "sum(tin_invest_portfolio{type=\"priceTotal\"})",
-          "instant": false,
+          "instant": true,
           "legendFormat": " ",
-          "range": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -144,7 +145,7 @@
               },
               {
                 "color": "red",
-                "value": -9999999999
+                "value": -100000000000000000000
               },
               {
                 "color": "green",
@@ -154,7 +155,20 @@
           },
           "unit": "currencyRUB"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": " p"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 3,
@@ -175,7 +189,7 @@
           "fields": "",
           "values": false
         },
-        "textMode": "value_and_name"
+        "textMode": "value"
       },
       "pluginVersion": "10.0.2",
       "targets": [
@@ -184,13 +198,27 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
+          "exemplar": false,
           "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"})",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "legendFormat": " ",
-          "range": true,
+          "range": false,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{type=\"priceTotal\"}) - sum(tin_invest_portfolio{type=\"yieldTotal\"}))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": " p",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Total Yield",
@@ -214,7 +242,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -226,7 +254,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -311,7 +339,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -323,7 +351,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -349,7 +377,36 @@
           },
           "unit": "₽"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "percent"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -380,14 +437,428 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"})",
           "instant": false,
           "legendFormat": "yield",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{type=\"priceTotal\"}) - sum(tin_invest_portfolio{type=\"yieldTotal\"}))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "percent",
+          "range": true,
+          "refId": "B"
         }
       ],
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "₽"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 76,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (account) (tin_invest_portfolio{type=\"priceTotal\"})",
+          "instant": false,
+          "legendFormat": "{{account}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Account Price",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "₽"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 11
+      },
+      "id": 77,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (account) (tin_invest_portfolio{type=\"yieldTotal\"})",
+          "instant": false,
+          "legendFormat": "{{account}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Account Yield",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "₽"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 78,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "expr": "sum by(instrument) (tin_invest_portfolio{type=\"priceTotal\"})",
+          "instant": false,
+          "legendFormat": "{{account}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Instrument Price Total",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "₽"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "id": 79,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(instrument) (tin_invest_portfolio{type=\"yieldTotal\"}) != 0",
+          "instant": false,
+          "legendFormat": "{{account}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Instrument Yield Total",
       "type": "timeseries"
     },
     {
@@ -396,7 +867,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 29
       },
       "id": 16,
       "panels": [],
@@ -422,7 +893,7 @@
               },
               {
                 "color": "red",
-                "value": -9999999999
+                "value": -100000000000000000000
               },
               {
                 "color": "green",
@@ -438,7 +909,7 @@
         "h": 3,
         "w": 12,
         "x": 0,
-        "y": 12
+        "y": 30
       },
       "id": 34,
       "options": {
@@ -463,10 +934,11 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
+          "exemplar": false,
           "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"})",
-          "instant": false,
+          "instant": true,
           "legendFormat": " ",
-          "range": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -490,7 +962,7 @@
               },
               {
                 "color": "red",
-                "value": -9999999999
+                "value": -100000000000000000000
               },
               {
                 "color": "green",
@@ -500,19 +972,32 @@
           },
           "unit": "currencyRUB"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": " p"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 3,
         "w": 12,
         "x": 12,
-        "y": 12
+        "y": 30
       },
-      "id": 37,
+      "id": 80,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
-        "justifyMode": "auto",
+        "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -521,7 +1006,7 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value"
       },
       "pluginVersion": "10.0.2",
       "targets": [
@@ -530,13 +1015,27 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
+          "exemplar": false,
           "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"})",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "legendFormat": " ",
-          "range": true,
+          "range": false,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"}) - sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": " p",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Account Yield",
@@ -560,7 +1059,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -572,7 +1071,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -604,7 +1103,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 15
+        "y": 33
       },
       "id": 32,
       "options": {
@@ -659,7 +1158,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -671,7 +1170,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -697,13 +1196,38 @@
           },
           "unit": "₽"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "percent"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 15
+        "y": 33
       },
       "id": 38,
       "options": {
@@ -730,13 +1254,26 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"})",
           "hide": false,
           "instant": false,
           "legendFormat": "yield",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"}) - sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "percent",
+          "range": true,
+          "refId": "A"
         }
       ],
       "type": "timeseries"
@@ -759,7 +1296,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -771,7 +1308,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -803,7 +1340,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 23
+        "y": 41
       },
       "id": 1,
       "options": {
@@ -857,7 +1394,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -869,7 +1406,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -901,7 +1438,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 23
+        "y": 41
       },
       "id": 3,
       "options": {
@@ -955,7 +1492,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -967,7 +1504,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -999,7 +1536,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 49
       },
       "id": 39,
       "options": {
@@ -1053,7 +1590,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 10,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -1065,7 +1602,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1097,7 +1634,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 49
       },
       "id": 31,
       "options": {
@@ -1165,13 +1702,13 @@
     ]
   },
   "time": {
-    "from": "now-2d",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Tinkoff",
   "uid": "c35f69a1-f6fb-4ca8-b6da-132342e3022e",
-  "version": 18,
+  "version": 36,
   "weekStart": ""
 }
