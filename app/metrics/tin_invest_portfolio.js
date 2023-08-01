@@ -1,10 +1,15 @@
 import client from 'prom-client';
 
 import Tinkoff from '../api/tinkoff.js';
+import {replaceByKeyValue} from '../helpers/object.js';
 import {getCurrentFilename} from '../helpers/paths.js';
 
-const currencies = {
+const figiToCurrency = {
     RUB000UTSTOM: 'Рубли',
+};
+
+const nameReplacements = {
+    '- привилегированные акции': 'прив.',
 };
 
 export default new client.Gauge({
@@ -30,10 +35,10 @@ export default new client.Gauge({
                     let positionName;
 
                     if (position.instrumentType === 'currency') {
-                        positionName = currencies[position.figi];
+                        positionName = figiToCurrency[position.figi];
                     } else {
                         const {instruments} = await Tinkoff.findInstrument(position.figi);
-                        positionName = instruments[0].name;
+                        positionName = replaceByKeyValue(nameReplacements, instruments[0].name);
                     }
 
                     const positionQuantity = Number(position.quantity.units);
