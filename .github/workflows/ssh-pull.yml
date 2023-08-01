@@ -1,4 +1,4 @@
-name: SSH pull
+name: SSH
 
 on:
   push:
@@ -6,9 +6,9 @@ on:
       - master
 
 jobs:
-  pull:
-    name: Run SSH pull
-    environment: my
+  ssh:
+    name: SSH
+    environment: vds
     runs-on: ubuntu-latest
     steps:
       - name: Configure SSH
@@ -31,4 +31,4 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT }}
 
       - name: Run pull
-        run: ssh vds 'cd ~/git/tin-invest-prom-exporter && git pull'
+        run: ssh vds 'cd ~/git/tin-invest-prom-exporter && git pull && npm run setup && systemctl restart tin-invest-exporter.service'
