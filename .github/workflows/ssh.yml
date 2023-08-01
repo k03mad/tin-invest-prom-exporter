@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            z tin-invest-prom-exporter
-            gpl
+            cd ~/git/tin-invest-prom-exporter
+            git pull
             npm run setup
-            screstart tin-invest-exporter.service
+            systemctl restart tin-invest-exporter.service
