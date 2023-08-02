@@ -620,7 +620,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -720,7 +721,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2203,18 +2205,18 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(account)",
+        "definition": "query_result(count by (account)(count_over_time(tin_invest_portfolio[10m])))",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "account",
         "options": [],
         "query": {
-          "query": "label_values(account)",
+          "query": "query_result(count by (account)(count_over_time(tin_invest_portfolio[10m])))",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
-        "regex": "",
+        "regex": "/\"(.+)\"/",
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"
@@ -2222,13 +2224,13 @@
     ]
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Tinkoff",
   "uid": "c35f69a1-f6fb-4ca8-b6da-132342e3022e",
-  "version": 41,
+  "version": 47,
   "weekStart": ""
 }
