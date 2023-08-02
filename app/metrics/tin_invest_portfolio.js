@@ -22,6 +22,8 @@ export default new client.Gauge({
     ],
 
     async collect() {
+        this.reset();
+
         const {accounts} = await Tinkoff.getAccounts();
 
         await Promise.all(accounts.map(async account => {
