@@ -10,6 +10,7 @@ const figiToCurrency = {
 
 const nameReplacements = {
     '- привилегированные акции': 'прив.',
+    ' Вечный портфель ': 'ВП',
 };
 
 export default new client.Gauge({
