@@ -99,5 +99,16 @@ class Tinkoff {
         return Number(price.units) + (Math.abs(price.nano) / 1_000_000_000);
     }
 
+    /**
+     * @param {object} account
+     * @param {string} account.status
+     * @param {string} account.name
+     * @returns {boolean}
+     */
+    isOpenAndNotRestrictedAccount(account) {
+        return account.status === 'ACCOUNT_STATUS_OPEN'
+            && account.name !== 'Инвесткопилка';
+    }
+
 }
 export default new Tinkoff();

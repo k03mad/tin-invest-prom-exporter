@@ -15,7 +15,7 @@ const nameReplacements = {
 
 export default new client.Gauge({
     name: getCurrentFilename(import.meta.url),
-    help: 'Portfolio',
+    help: 'Instruments',
     labelNames: [
         'account',
         'instrument',
@@ -28,10 +28,7 @@ export default new client.Gauge({
         const {accounts} = await Tinkoff.getAccounts();
 
         await Promise.all(accounts.map(async account => {
-            if (
-                account.status === 'ACCOUNT_STATUS_OPEN'
-                && account.name !== 'Инвесткопилка'
-            ) {
+            if (Tinkoff.isOpenAndNotRestrictedAccount(account)) {
                 const portfolio = await Tinkoff.getPortfolio(account.id);
 
                 await Promise.all(portfolio.positions.map(async position => {
