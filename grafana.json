@@ -2297,14 +2297,14 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "query_result(count by (account)(count_over_time(tin_invest_portfolio[10m])))",
+        "definition": "query_result(count by (account)(count_over_time(tin_invest_portfolios[10m])))",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "account",
         "options": [],
         "query": {
-          "query": "query_result(count by (account)(count_over_time(tin_invest_portfolio[10m])))",
+          "query": "query_result(count by (account)(count_over_time(tin_invest_portfolios[10m])))",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2316,13 +2316,13 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Tinkoff",
   "uid": "b837eda6-c17a-4faf-8ca2-62e921bcc644",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }
