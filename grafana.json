@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "10.0.2"
+      "version": "10.0.3"
     },
     {
       "type": "datasource",
@@ -109,16 +109,16 @@
         },
         "textMode": "value_and_name"
       },
-      "pluginVersion": "10.0.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(tin_invest_portfolio{type=\"priceTotal\"})",
+          "expr": "sum(tin_invest_portfolios{type=\"totalAmountPortfolio\"})",
           "instant": true,
           "legendFormat": " ",
           "range": false,
@@ -191,7 +191,7 @@
         },
         "textMode": "value"
       },
-      "pluginVersion": "10.0.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "datasource": {
@@ -200,7 +200,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"})",
+          "expr": "sum(tin_invest_portfolios{type=\"expectedYield\"})",
           "hide": false,
           "instant": true,
           "legendFormat": " ",
@@ -214,7 +214,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{type=\"priceTotal\"}) - sum(tin_invest_portfolio{type=\"yieldTotal\"}))",
+          "expr": "sum(tin_invest_portfolios{type=\"expectedYield\"}) * 100 / (sum(tin_invest_portfolios{type=\"totalAmountPortfolio\"}) - sum(tin_invest_portfolios{type=\"expectedYield\"}))",
           "hide": false,
           "instant": true,
           "legendFormat": " p",
@@ -281,7 +281,33 @@
           },
           "unit": "₽"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "invested"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -312,12 +338,25 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "sum(tin_invest_portfolio{type=\"priceTotal\"})",
+          "editorMode": "code",
+          "expr": "sum(tin_invest_portfolios{type=\"totalAmountPortfolio\"})",
           "instant": false,
           "legendFormat": "price",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum(tin_invest_portfolios{type=\"invested\"})",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "invested",
+          "range": true,
+          "refId": "B"
         }
       ],
       "type": "timeseries"
@@ -439,7 +478,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"})",
+          "expr": "sum(tin_invest_portfolios{type=\"expectedYield\"})",
           "instant": false,
           "legendFormat": "yield",
           "range": true,
@@ -451,7 +490,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(tin_invest_portfolio{type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{type=\"priceTotal\"}) - sum(tin_invest_portfolio{type=\"yieldTotal\"}))",
+          "expr": "sum(tin_invest_portfolios{type=\"expectedYield\"}) * 100 / (sum(tin_invest_portfolios{type=\"totalAmountPortfolio\"}) - sum(tin_invest_portfolios{type=\"expectedYield\"}))",
           "hide": false,
           "instant": false,
           "legendFormat": "percent",
@@ -565,7 +604,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (account) (tin_invest_portfolio{type=\"priceTotal\"})",
+          "expr": "sum by (account) (tin_invest_portfolios{type=\"totalAmountPortfolio\"}) != 0",
           "instant": false,
           "legendFormat": "{{account}}",
           "range": true,
@@ -665,7 +704,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (account) (tin_invest_portfolio{type=\"yieldTotal\"})",
+          "expr": "sum by (account) (tin_invest_portfolios{type=\"expectedYield\"}) != 0",
           "hide": false,
           "instant": false,
           "legendFormat": "{{account}}",
@@ -766,7 +805,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (account) (tin_invest_portfolio{type=\"yieldTotal\"}) * 100 / (sum by (account) (tin_invest_portfolio{type=\"priceTotal\"}) - sum by (account) (tin_invest_portfolio{type=\"yieldTotal\"}))",
+          "expr": "sum by (account) (tin_invest_portfolios{type=\"expectedYield\"}) * 100 / (sum by (account) (tin_invest_portfolios{type=\"totalAmountPortfolio\"}) - sum by (account) (tin_invest_portfolios{type=\"expectedYield\"}))",
           "hide": false,
           "instant": false,
           "legendFormat": "{{account}}",
@@ -835,7 +874,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -879,7 +919,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum by(instrument) (tin_invest_portfolio{type=\"priceTotal\"})",
+          "expr": "sum by(instrument) (tin_invest_instruments{type=\"priceTotal\"})",
           "instant": false,
           "legendFormat": "{{account}}",
           "range": true,
@@ -934,7 +974,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -978,7 +1019,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by(instrument) (tin_invest_portfolio{type=\"yieldTotal\"}) != 0",
+          "expr": "sum by(instrument) (tin_invest_instruments{instrument!=\"Рубли\",type=\"yieldTotal\"})",
           "instant": false,
           "legendFormat": "{{account}}",
           "range": true,
@@ -1033,7 +1074,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1077,7 +1119,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (instrument) (tin_invest_portfolio{type=\"yieldTotal\"}) * 100 / (sum by (instrument) (tin_invest_portfolio{type=\"priceTotal\"}) - sum by (instrument) (tin_invest_portfolio{type=\"yieldTotal\"})) != 0",
+          "expr": "sum by (instrument) (tin_invest_instruments{instrument!=\"Рубли\",type=\"yieldTotal\"}) * 100 / (sum by (instrument) (tin_invest_instruments{type=\"priceTotal\"}) - sum by (instrument) (tin_invest_instruments{type=\"yieldTotal\"}))",
           "hide": false,
           "instant": false,
           "legendFormat": "{{instrument}}",
@@ -1133,7 +1175,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1177,7 +1220,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "tin_invest_portfolio{instrument!=\"Рубли\",type=\"priceOne\"}",
+          "expr": "tin_invest_instruments{instrument!=\"Рубли\",type=\"priceOne\"}",
           "instant": false,
           "legendFormat": "{{instrument}}",
           "range": true,
@@ -1233,7 +1276,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1276,8 +1320,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "sum by(instrument) (tin_invest_portfolio{type=\"quantity\"})",
+          "editorMode": "code",
+          "expr": "sum by(instrument) (tin_invest_instruments{type=\"quantity\"})",
           "instant": false,
           "legendFormat": "{{account}}",
           "range": true,
@@ -1314,7 +1358,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": null
               },
               {
                 "color": "red",
@@ -1351,16 +1396,16 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "10.0.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"})",
+          "expr": "tin_invest_portfolios{account=\"$account\", type=\"totalAmountPortfolio\"}",
           "instant": true,
           "legendFormat": " ",
           "range": false,
@@ -1382,7 +1427,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent"
+                "color": "transparent",
+                "value": null
               },
               {
                 "color": "red",
@@ -1432,7 +1478,7 @@
         },
         "textMode": "value"
       },
-      "pluginVersion": "10.0.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "datasource": {
@@ -1441,7 +1487,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"})",
+          "expr": "tin_invest_portfolios{account=\"$account\", type=\"expectedYield\"}",
           "hide": false,
           "instant": true,
           "legendFormat": " ",
@@ -1455,7 +1501,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"}) - sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}))",
+          "expr": "tin_invest_portfolios{account=\"$account\", type=\"expectedYieldPercent\"}",
           "hide": false,
           "instant": true,
           "legendFormat": " p",
@@ -1511,7 +1557,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1521,7 +1568,33 @@
           },
           "unit": "₽"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "invested"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 9,
@@ -1554,12 +1627,25 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"})",
+          "editorMode": "code",
+          "expr": "tin_invest_portfolios{account=\"$account\", type=\"totalAmountPortfolio\"}",
           "instant": false,
           "legendFormat": "price",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "tin_invest_portfolios{account=\"$account\", type=\"invested\"}",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "invested",
+          "range": true,
+          "refId": "B"
         }
       ],
       "type": "timeseries"
@@ -1609,7 +1695,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1678,7 +1765,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"})",
+          "expr": "tin_invest_portfolios{account=\"$account\", type=\"expectedYield\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "yield",
@@ -1691,7 +1778,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}) * 100 / (sum(tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"}) - sum(tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"}))",
+          "expr": "tin_invest_portfolios{account=\"$account\", type=\"expectedYieldPercent\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "percent",
@@ -1746,7 +1833,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1789,8 +1877,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "tin_invest_portfolio{account=\"$account\", type=\"priceTotal\"}",
+          "editorMode": "code",
+          "expr": "tin_invest_instruments{account=\"$account\", type=\"priceTotal\"}",
           "instant": false,
           "legendFormat": "{{instrument}}",
           "range": true,
@@ -1845,7 +1933,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1888,8 +1977,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "tin_invest_portfolio{account=\"$account\", type=\"yieldTotal\"} != 0",
+          "editorMode": "code",
+          "expr": "tin_invest_instruments{account=\"$account\", type=\"yieldTotal\", instrument!=\"Рубли\"}",
           "instant": false,
           "legendFormat": "{{instrument}}",
           "range": true,
@@ -1944,7 +2033,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1988,7 +2078,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "tin_invest_portfolio{account=\"$account\", type=\"yieldPercentTotal\"} != 0",
+          "expr": "tin_invest_instruments{account=\"$account\", type=\"yieldPercentTotal\", instrument!=\"Рубли\"}",
           "instant": false,
           "legendFormat": "{{instrument}}",
           "range": true,
@@ -2043,7 +2133,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2084,8 +2175,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "tin_invest_portfolio{account=\"$account\", type=\"priceOne\"}",
+          "editorMode": "code",
+          "expr": "tin_invest_instruments{account=\"$account\", type=\"priceOne\", instrument!=\"Рубли\"}",
           "instant": false,
           "legendFormat": "{{instrument}}",
           "range": true,
@@ -2140,7 +2231,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2181,8 +2273,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "tin_invest_portfolio{account=\"$account\", type=\"quantity\"}",
+          "editorMode": "code",
+          "expr": "tin_invest_instruments{account=\"$account\", type=\"quantity\"}",
           "instant": false,
           "legendFormat": "{{instrument}}",
           "range": true,
@@ -2230,7 +2322,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "Tinkoff",
-  "uid": "c35f69a1-f6fb-4ca8-b6da-132342e3022e",
-  "version": 47,
+  "uid": "b837eda6-c17a-4faf-8ca2-62e921bcc644",
+  "version": 4,
   "weekStart": ""
 }
