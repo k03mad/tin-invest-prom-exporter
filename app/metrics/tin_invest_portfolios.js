@@ -20,15 +20,17 @@ export default new client.Gauge({
             if (Tinkoff.isOpenAndNotRestrictedAccount(account)) {
                 const portfolio = await Tinkoff.getPortfolio(account.id);
 
-                const expectedYieldPercent = Tinkoff.getUnitsWithNano(portfolio.expectedYield);
-                const totalAmountPortfolio = Tinkoff.getUnitsWithNano(portfolio.totalAmountPortfolio);
-                const expectedYield = totalAmountPortfolio * expectedYieldPercent / (100 + expectedYieldPercent);
-                const invested = totalAmountPortfolio - expectedYield;
+                if (portfolio.positions.length > 0) {
+                    const expectedYieldPercent = Tinkoff.getUnitsWithNano(portfolio.expectedYield);
+                    const totalAmountPortfolio = Tinkoff.getUnitsWithNano(portfolio.totalAmountPortfolio);
+                    const expectedYield = totalAmountPortfolio * expectedYieldPercent / (100 + expectedYieldPercent);
+                    const invested = totalAmountPortfolio - expectedYield;
 
-                this.labels(account.name, 'invested').set(invested);
-                this.labels(account.name, 'expectedYield').set(expectedYield);
-                this.labels(account.name, 'expectedYieldPercent').set(expectedYieldPercent);
-                this.labels(account.name, 'totalAmountPortfolio').set(totalAmountPortfolio);
+                    this.labels(account.name, 'invested').set(invested);
+                    this.labels(account.name, 'expectedYield').set(expectedYield);
+                    this.labels(account.name, 'expectedYieldPercent').set(expectedYieldPercent);
+                    this.labels(account.name, 'totalAmountPortfolio').set(totalAmountPortfolio);
+                }
             }
         }));
     },
