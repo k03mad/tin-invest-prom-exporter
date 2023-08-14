@@ -281,33 +281,7 @@
           },
           "unit": "₽"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "invested"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -344,19 +318,6 @@
           "legendFormat": "price",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum(tin_invest_portfolios{type=\"invested\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "invested",
-          "range": true,
-          "refId": "B"
         }
       ],
       "type": "timeseries"
@@ -1633,19 +1594,6 @@
           "legendFormat": "price",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "tin_invest_portfolios{account=\"$account\", type=\"invested\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "invested",
-          "range": true,
-          "refId": "B"
         }
       ],
       "type": "timeseries"
@@ -2316,13 +2264,13 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Tinkoff",
   "uid": "b837eda6-c17a-4faf-8ca2-62e921bcc644",
-  "version": 5,
+  "version": 7,
   "weekStart": ""
 }
