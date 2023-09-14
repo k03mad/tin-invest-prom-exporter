@@ -1,9 +1,7 @@
-import client from 'prom-client';
-
 import Tinkoff from '../api/tinkoff.js';
 import {getCurrentFilename} from '../helpers/paths.js';
 
-export default new client.Gauge({
+export default {
     name: getCurrentFilename(import.meta.url),
     help: 'Portfolios',
     labelNames: [
@@ -11,8 +9,8 @@ export default new client.Gauge({
         'type',
     ],
 
-    async collect() {
-        this.reset();
+    async collect(ctx) {
+        ctx.reset();
 
         const {accounts} = await Tinkoff.getAccounts();
 
@@ -25,11 +23,11 @@ export default new client.Gauge({
                     const totalAmountPortfolio = Tinkoff.getUnitsWithNano(portfolio.totalAmountPortfolio);
                     const expectedYield = totalAmountPortfolio * expectedYieldPercent / (100 + expectedYieldPercent);
 
-                    this.labels(account.name, 'expectedYield').set(expectedYield);
-                    this.labels(account.name, 'expectedYieldPercent').set(expectedYieldPercent);
-                    this.labels(account.name, 'totalAmountPortfolio').set(totalAmountPortfolio);
+                    ctx.labels(account.name, 'expectedYield').set(expectedYield);
+                    ctx.labels(account.name, 'expectedYieldPercent').set(expectedYieldPercent);
+                    ctx.labels(account.name, 'totalAmountPortfolio').set(totalAmountPortfolio);
                 }
             }
         }));
     },
-});
+};

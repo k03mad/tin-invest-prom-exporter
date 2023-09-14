@@ -1,5 +1,3 @@
-import client from 'prom-client';
-
 import Tinkoff from '../api/tinkoff.js';
 import {replaceByKeyValue} from '../helpers/object.js';
 import {getCurrentFilename} from '../helpers/paths.js';
@@ -13,7 +11,7 @@ const nameReplacements = {
     'Вечный портфель': 'ВП',
 };
 
-export default new client.Gauge({
+export default {
     name: getCurrentFilename(import.meta.url),
     help: 'Instruments',
     labelNames: [
@@ -22,8 +20,8 @@ export default new client.Gauge({
         'type',
     ],
 
-    async collect() {
-        this.reset();
+    async collect(ctx) {
+        ctx.reset();
 
         const {accounts} = await Tinkoff.getAccounts();
 
@@ -48,13 +46,13 @@ export default new client.Gauge({
                     const positionYieldTotal = Tinkoff.getUnitsWithNano(position.expectedYield);
                     const positionYieldPercentTotal = positionYieldTotal * 100 / (positionPriceTotal - positionYieldTotal);
 
-                    this.labels(account.name, positionName, 'priceOne').set(positionPriceOne);
-                    this.labels(account.name, positionName, 'priceTotal').set(positionPriceTotal);
-                    this.labels(account.name, positionName, 'yieldTotal').set(positionYieldTotal);
-                    this.labels(account.name, positionName, 'yieldPercentTotal').set(positionYieldPercentTotal);
-                    this.labels(account.name, positionName, 'quantity').set(positionQuantity);
+                    ctx.labels(account.name, positionName, 'priceOne').set(positionPriceOne);
+                    ctx.labels(account.name, positionName, 'priceTotal').set(positionPriceTotal);
+                    ctx.labels(account.name, positionName, 'yieldTotal').set(positionYieldTotal);
+                    ctx.labels(account.name, positionName, 'yieldPercentTotal').set(positionYieldPercentTotal);
+                    ctx.labels(account.name, positionName, 'quantity').set(positionQuantity);
                 }));
             }
         }));
     },
-});
+};
