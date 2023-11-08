@@ -96,7 +96,7 @@ class Tinkoff {
      * @returns {number}
      */
     getUnitsWithNano(price) {
-        return Number(price.units) + (Math.abs(price.nano) / 1_000_000_000);
+        return Number(price.units) + (price.nano / 1_000_000_000);
     }
 
     /**
