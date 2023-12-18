@@ -22,7 +22,7 @@
     "prom-client": "15.0.0"
   },
   "devDependencies": {
-    "@k03mad/eslint-config": "14.10.0",
+    "@k03mad/eslint-config": "14.13.0",
     "@microsoft/eslint-formatter-sarif": "3.0.0",
     "@stylistic/eslint-plugin": "1.4.1",
     "eslint": "8.55.0",
