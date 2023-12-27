@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import Tinkoff from '../api/tinkoff.js';
 import {getCurrentFilename} from '../helpers/paths.js';
 
