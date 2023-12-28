@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/filename-case */
-
 import Tinkoff from '../api/tinkoff.js';
 import {replaceByKeyValue} from '../helpers/object.js';
 import {getCurrentFilename} from '../helpers/paths.js';
