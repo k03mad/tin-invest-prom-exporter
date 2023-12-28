@@ -1,4 +1,8 @@
-[ctrld-prom-exporter](https://github.com/k03mad/ctrld-prom-exporter) • [mik-prom-exporter](https://github.com/k03mad/mik-prom-exporter) • tin-invest-prom-exporter • [ya-iot-prom-exporter](https://github.com/k03mad/ya-iot-prom-exporter)
+• [ctrld-prom-exporter](https://github.com/k03mad/ctrld-prom-exporter) \
+• [mik-prom-exporter](https://github.com/k03mad/mik-prom-exporter) \
+• [mosobleirc-prom-exporter](https://github.com/k03mad/mosobleirc-prom-exporter) \
+• tin-invest-prom-exporter \
+• [ya-iot-prom-exporter](https://github.com/k03mad/ya-iot-prom-exporter)
 
 # [Tinkoff Investment — Prometheus] exporter
 
