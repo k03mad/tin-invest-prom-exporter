@@ -11,6 +11,10 @@
 — Start exporter:
 
 ```bash
+# one time
+npm i pnpm -g
+npm run setup
+# start app
 npm run start --token=t.a1234321 --port=11000
 # or with envs
 TINKOFF_API_TOKEN=t.a1234321 TINKOFF_EXPORTER_PORT=11000 npm run start
