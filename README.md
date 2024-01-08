@@ -12,8 +12,8 @@
 
 ```bash
 # one time
-npm i pnpm -g
 npm run setup
+
 # start app
 npm run start --token=t.a1234321 --port=11000
 # or with envs
