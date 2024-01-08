@@ -52,6 +52,21 @@ class Tinkoff {
     }
 
     /**
+     * @param {string} query
+     * @returns {Promise<object>}
+     */
+    findInstrument(query) {
+        return this._getCache({
+            path: 'tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument',
+            options: {
+                json: {
+                    query,
+                },
+            },
+        });
+    }
+
+    /**
      * @returns {Promise<object>}
      */
     getAccounts() {
@@ -69,21 +84,6 @@ class Tinkoff {
                 json: {
                     accountId,
                     currency: 'RUB',
-                },
-            },
-        });
-    }
-
-    /**
-     * @param {string} query
-     * @returns {Promise<object>}
-     */
-    findInstrument(query) {
-        return this._getCache({
-            path: 'tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument',
-            options: {
-                json: {
-                    query,
                 },
             },
         });
