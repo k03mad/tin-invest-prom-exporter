@@ -22,4 +22,4 @@ TINKOFF_API_TOKEN=t.a1234321 TINKOFF_EXPORTER_PORT=11000 npm run start
 ```
 
 — Update Prometheus `scrape_configs` \
-— [Import Grafana dashboard](grafana.json)
+— [Import Grafana dashboard](grafana)
