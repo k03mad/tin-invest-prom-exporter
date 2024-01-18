@@ -1,5 +1,6 @@
 import {getDateYMDHMS} from '@k03mad/simple-date';
 import {log} from '@k03mad/simple-log';
+import {registerMetrics} from '@k03mad/simple-prom';
 import compression from 'compression';
 import express from 'express';
 import helmet from 'helmet';
@@ -9,7 +10,13 @@ import env from '../env.js';
 
 import {nameText, numText} from './helpers/colors.js';
 import {packageJson} from './helpers/parse.js';
-import register from './prom.js';
+import * as metrics from './metrics/_index.js';
+
+const register = registerMetrics({
+    app: packageJson.name,
+    port: env.server.port,
+    metrics,
+});
 
 const app = express();
 
@@ -21,8 +28,8 @@ app.use(helmet());
 app.use(compression());
 
 app.get('/metrics', async (req, res) => {
-    const metrics = await register.metrics();
-    res.send(metrics);
+    const data = await register.metrics();
+    res.send(data);
 });
 
 app.listen(env.server.port, () => log([
